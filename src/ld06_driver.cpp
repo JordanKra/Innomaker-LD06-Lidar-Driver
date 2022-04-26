@@ -1,30 +1,34 @@
-#include "ld06/ld06_driver.hpp"
-#include "serial.hpp"
-#include "scan.h"
+#include "LD06/ld06_driver.hpp"
+#include "LD06/serial.hpp"
+#include "LD06/scan.h"
 
 
 namespace ld06_driver{
 
     int ld06_driver::parse_scan(){
         //Read in scans on the port and fill scan struct
-        buf_len = serial::read(&buf);
-
+        buf_len = serial_port.read_scan(&buf);
+        //calculate CRC
+        scan.crc8 = CalCRC8(&buf, buf_len);
+        return scan.crc8;
     }
-    
-    bool ld06_driver::init_port(std::string port){
+
+    //Connect to and configure the specified serial port
+    bool ld06_driver::init_connection(const char *port){
         //Connect to specified port
+        printf("Attempting to connect to the port\n");
         int timeout = 5;
-        while(!serial::connect(&port) && timeout > 0){
+        while(!serial_port.connect(port)){
             //Attempt to reconnect
             if(timeout == 0){
-                printf("Failed to connect to serial port after 5 attempts!")
+                printf("Failed to connect to serial port after 5 attempts!");
                 return false;
             }
-            printf("Retrying...");
+            printf("Retrying...\n");
             timeout--;
         }
         //Configure port
-        serial::configure();
+        serial_port.configure();
         return true;
     }
 

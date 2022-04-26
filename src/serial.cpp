@@ -1,26 +1,26 @@
 #include "LD06/serial.hpp"
 #include "LD06/crc_check.h"
+#include <iostream>
 
 namespace serial{
-
-    class serial{
             //Connect to a serial port
-            bool serial::connect(std::string *port){
+            bool serial::connect(const char *port){
+                std::cout << "Attempting to connect to port: " << port << std::endl;
                 port_number = open(port, O_RDWR);
                 if(port_number < 0){
-                    printf("Error connecting to the serial port!");
+                    printf("Error %i connecting to the serial port!\n", errno);
                     return false;
                 }
+                printf("Connected to serial port!");
                 return true;
             }
 
             //Configure a serial port
             void serial::configure(){
-
                 //Get params from port
                 if(tcgetattr(port_number, &tty) != 0){
-                    printf("Error %i from tcgetattr: %s\n", errno, strerror(errno));
-                    return 1;
+                    printf("Error %i from tcgetattr\n", errno);
+                    return;
                 }
                 //Set port parameters
                 tty.c_cflag &= ~PARENB;
@@ -42,20 +42,18 @@ namespace serial{
                 cfsetispeed(&tty, B230400);
 
                 if (tcsetattr(port_number, TCSANOW, &tty) != 0) {
-                    printf("Error %i from tcsetattr: %s\n", errno, strerror(errno));
+                    printf("Error %i from tcsetattr\n", errno);
                 }
             }
 
             //Read data from the serial port return is number of bytes read
-            uint32_t serial::read(uint8_t *buf){
+            uint32_t serial::read_scan(uint8_t *buf){
                 uint32_t len = read(port_number, &buf, sizeof(buf));
                 if(len < 0){
-                    printf("Read error: %s", strerror(errno));
+                    printf("Read error!\n");
                     return -1;
                 }
                 return len;
             }
 
-    };
-
-} //serial
+}//serial
