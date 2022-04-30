@@ -1,5 +1,4 @@
 #include "LD06/serial.hpp"
-#include "LD06/crc_check.h"
 #include <iostream>
 
 namespace serial{
@@ -11,7 +10,7 @@ namespace serial{
                     printf("Error %i connecting to the serial port!\n", errno);
                     return false;
                 }
-                printf("Connected to serial port!");
+                printf("Connected to serial port!\n");
                 return true;
             }
 
@@ -47,8 +46,8 @@ namespace serial{
             }
 
             //Read data from the serial port return is number of bytes read
-            uint32_t serial::read_scan(uint8_t *buf){
-                uint32_t len = read(port_number, &buf, sizeof(buf));
+            uint32_t serial::read_scan(char *buf, int length){
+                uint32_t len = read(port_number, buf, length);
                 if(len < 0){
                     printf("Read error!\n");
                     return -1;

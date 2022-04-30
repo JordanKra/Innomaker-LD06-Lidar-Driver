@@ -9,11 +9,11 @@ namespace ld06_driver{
     class ld06_driver{
         private:
             const std::string port;
-            uint8_t buf;
             uint32_t buf_len;
-            struct ScanFrameDef scan;
+            struct ScanFrameDef *scan;
             struct LidarPointStructDef point;
             serial::serial serial_port;
+            char buf[];
         public:
 
             //Parse scan data coming off the serial port
@@ -23,6 +23,6 @@ namespace ld06_driver{
             bool init_connection(const char * port);
 
             //CRC check function
-            uint8_t CalCRC8(uint8_t *p, uint8_t len);
+            uint8_t CalCRC8(char *p, uint8_t len);
     };
 }

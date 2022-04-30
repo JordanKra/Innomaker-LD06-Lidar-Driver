@@ -6,6 +6,7 @@
 #include <unistd.h> // write(), read(), close()
 #include <string>
 #include <cstdint>
+#include <iostream>
 
 namespace serial{
     class serial{
@@ -20,7 +21,7 @@ namespace serial{
             void configure();
 
             //Read data from the serial port
-            uint32_t read_scan(uint8_t *buf);
+            uint32_t read_scan(char *buf, int length);
 
     };
 }

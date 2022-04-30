@@ -4,6 +4,7 @@
 #define ANGLE_PER_FRAME 12
 #define POINT_PER_PACK 12
 #define HEADER 0x54
+#define MAX_MESSAGE_SIZE 230400
 struct LidarPointStructDef
 {
   uint16_t distance;

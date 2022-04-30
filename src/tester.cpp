@@ -9,6 +9,6 @@ int main(int argc, char * argv[]){
     printf("Initializing connection to port\n");
     driver.init_connection(port);
     while(true){
-        std::cout << "CRC: " << driver.parse_scan() << std::endl;
+        driver.parse_scan();
     }
 }
